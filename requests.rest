@@ -1,0 +1,47 @@
+GET http://localhost:3000/api/test/token
+
+###
+
+GET http://localhost:3000/api/test/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGltIiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNjY5MDIyNTM2LCJleHAiOjE2NjkwMjI1NTF9.vYKMAv0LDSo_5wzPbJ4BPSHagvT1Z-wy10iTXCY2UIM
+
+###
+
+GET http://localhost:3000/api/notes/
+
+###
+GET http://localhost:3000/api/notes/637dd3e81952c8b6814b354f
+
+###
+POST http://localhost:3000/api/notes/
+Content-Type: application/json
+
+{
+    "title": "title 1",
+    "content": "content 1"
+}
+
+###
+PATCH  http://localhost:3000/api/notes/637df2ca47336d27dab1a28a
+Content-Type: application/json
+
+{
+    "title": "title 1 new",
+    "content": "content 1"
+}
+
+###
+DELETE  http://localhost:3000/api/notes/637dd3dc1952c8b6814b354e
+
+###
+POST http://localhost:3000/api/test/rabbitmq/send
+Content-Type: application/json
+
+{
+    "data": {
+        "title": "test rabbit mq",
+        "message": "hello world"        
+    }    
+}
+
+###

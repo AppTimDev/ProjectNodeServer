@@ -1,0 +1,6 @@
+{
+    "verbose": true,
+    "watch": ["*.js"],
+    "ignore": ["node_modules/*", "notcommit/*", ".git/*", "*.md", ".gitignore"],
+    "delay": 2500
+}
