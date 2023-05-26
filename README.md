@@ -79,22 +79,33 @@ pm2 delete
 List all processes:  
 pm2 list
 
+---
 
-
-
-## install pm2-windows-service (work)
-1. Run the command in admin mode  
-npm i -g pm2-windows-service   
+## To restart pm2 automatically after reboot
+### install pm2-windows-service (work)
+1. Run the command in admin mode
+```sh
+npm i -g pm2
+npm i -g pm2-windows-service
 pm2-service-install -n PM2  
+```
 
-2. Set PM2_HOME to a path that can be accessed.
-C:\ProjectSoftware\.pm2
+2. Set PM2_HOME to a path that can be accessed.  
+Edit Environment Variables  
+New or edit system Variables  
+PM2_HOME: C:\etc\.pm2
+
+3. Some error: 'Sorry, this script requires pm2...' occur when statrting the pm2 service    
+Bug Fix (for window only as the install is not required for other os):   
+the PM2_SERVICE_PM2_DIR directory needs to be the PM2 directory within node_modules, change it to C:\ProgramData\npm\npm\node_modules\pm2
+PM2_SERVICE_PM2_DIR 
+C:\ProgramData\npm\npm\node_modules\pm2  
 
 - uninstall  
 pm2-service-uninstall -n PM2  
 npm uninstall -g pm2-windows-service pm2  
 
-### install pm2-installer
+### install pm2-installer (not work)
 1. Go to <https://github.com/jessety/pm2-installer> 
 2. Download the zip file and unzip to the path [install_path]
 3. Run the install commands
@@ -105,7 +116,7 @@ npm run configure-policy
 npm run setup
 ```
 
-## Using nssm and pm2_startup.bat (not restart auto)
+### Using nssm and pm2_startup.bat (not restart auto)
 1. Create your PM2 startup script which implements pm2 resurrect.
    Check out sample here(pm2_startup.bat)
 
