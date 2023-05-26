@@ -58,8 +58,9 @@ chrome://inspect
 ---
 
 ## PM2
-npm i -g pm2
-cross-env NODE_ENV=production pm2 start server.js --env production
+```sh
+npm i -g pm2  
+cross-env NODE_ENV=production pm2 start server.js --env production  
 cross-env NODE_ENV=production pm2 start server.js -i 4 --env production
 
 pm2 save
@@ -70,26 +71,28 @@ pm2 stop --help
 pm2 kill
 pm2 resurrect
 pm2 status
-
-List all processes:
-pm2 list
-
 pm2 stop
 pm2 restart
 pm2 delete
+```
+
+List all processes:  
+pm2 list
+
+
 
 
 ## install pm2-windows-service (work)
-1. Run the command in admin mode
-npm i -g pm2-windows-service
-pm2-service-install -n PM2
+1. Run the command in admin mode  
+npm i -g pm2-windows-service   
+pm2-service-install -n PM2  
 
 2. Set PM2_HOME to a path that can be accessed.
 C:\ProjectSoftware\.pm2
 
-- uninstall
-pm2-service-uninstall -n PM2
-
+- uninstall  
+pm2-service-uninstall -n PM2  
+npm uninstall -g pm2-windows-service pm2  
 
 ### install pm2-installer
 1. Go to <https://github.com/jessety/pm2-installer> 
@@ -106,16 +109,16 @@ npm run setup
 1. Create your PM2 startup script which implements pm2 resurrect.
    Check out sample here(pm2_startup.bat)
 
-2. As administrator, open command line, run:
-nssm.exe install PM2Service
-and set the following:
-Path: C:\Projects\ProjectNodeServer\pm2_startup.bat
-Folder: C:\Projects\ProjectNodeServer\
+2. As administrator, open command line, run:  
+nssm.exe install PM2Service  
+and set the following:  
+Path: C:\Projects\ProjectNodeServer\pm2_startup.bat  
+Folder: C:\Projects\ProjectNodeServer\  
 
-Startup Type: Automatic delayed
-Restart: None **
+Startup Type: Automatic delayed  
+Restart: None **  
  
-This will create a Windows Service called PM2Service 
+This will create a Windows Service called PM2Service   
 (If you want to delete service, run: nssm.exe remove PM2Service)
 
 ---
@@ -163,8 +166,7 @@ npm info express version
 ---
 
 # Vscode Rest Client
-use requests.rest file to send request
-in vscode
+use requests.rest file to send request in vscode
 
 ---
 
@@ -172,7 +174,7 @@ in vscode
 
 1. Go to https://www.mongodb.com/try/download/community and download
 
-2. Edit Environment variable
+2. Edit Environment variable  
 add the path C:\Program Files\MongoDB\Server\6.0\bin
 
 ### Check the version
@@ -184,7 +186,7 @@ db version v6.0.3
 For version 6, install mongosh
 https://www.mongodb.com/try/download/shell
 
-Using MongoDB:          6.0.3
+Using MongoDB:          6.0.3  
 Using Mongosh:          1.6.0
 
 ## mongosh commands
@@ -234,5 +236,5 @@ http://localhost:15672
 ---
 
 ## swagger
-Api document using swagger ui
+Api document using swagger ui  
 http://localhost:3000/doc

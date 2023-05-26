@@ -17,14 +17,13 @@ module.exports = {
         min_uptime: 10000,
         restart_delay: 20000,
         force: true,
-
-        env_production: {
-            NODE_ENV: "production",
-            PM2_VERSION: "v2" //process.env.PM2_VERSION
-        },
         env_development: {
             NODE_ENV: "development",
             PM2_VERSION: "v2"
+        },
+        env_production: {
+            NODE_ENV: "production",
+            PM2_VERSION: "v2" //process.env.PM2_VERSION
         }
     },{
         name: "node-dev",
@@ -42,6 +41,14 @@ module.exports = {
 
         max_memory_restart: "300M",
         autorestart: false,
-        force: true
+        force: true,
+        env_development: {
+            NODE_ENV: "development",
+            PM2_VERSION: "v2"
+        },
+        env_production: {
+            NODE_ENV: "production",
+            PM2_VERSION: "v2" //process.env.PM2_VERSION
+        }
     }]
 }

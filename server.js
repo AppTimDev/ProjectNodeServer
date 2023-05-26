@@ -3,8 +3,12 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const path = require('path');
 const mongoose = require('mongoose')
-
-
+const app = express();
+const {
+    config,
+    webApp,
+    webAppReact
+} = require('./config');
 const isProduction = process.env.NODE_ENV === 'production'
 if (isProduction) {
     //path default: path.resolve(process.cwd(), '.env')
@@ -14,7 +18,35 @@ if (isProduction) {
 } else {
     require('dotenv').config()
 }
+
+//import routes
+const postRouter = require("./routes/post");
+const sysRouter = require("./routes/sys");
+const userRouter = require("./routes/user");
+const testRouter = require("./routes/test");
+const notesRouter = require("./routes/notes");
+
+const ApiUrl = (link) => {
+    return api_url + link;
+}
+
+console.log(`Server mode: ${process.env.NODE_ENV}`);
 console.log(`DOTENV_ENV: ${process.env.DOTENV_ENV}`);
+if(process.env.PM2_VERSION){
+    console.log(`process.env.PM2_VERSION: ${process.env.PM2_VERSION}`);
+}else{
+    console.log(`pm2 is not using!`);
+}
+
+const CONFIG = isProduction ? config.production : config.development
+const {
+    port,
+    api_url,
+} = CONFIG
+
+if(!isProduction){
+    console.log(`API URL: http://localhost:${port}${api_url}`);
+}
 
 
 //redis init
@@ -50,7 +82,7 @@ if (process.env.ALLOW_REDIS == '1') {
     })()
 }
 
-//redis init
+//rabbit mq init
 if (process.env.ALLOW_RABBIT_MQ == '1') {
     const amqp = require("amqplib");
     (async () => {
@@ -92,40 +124,19 @@ if (process.env.ALLOW_RABBIT_MQ == '1') {
     })();
 }
 
-
-
-const app = express();
-const {
-    config,
-    simpleApp,
-    reactApp
-} = require('./config');
-
-
-
-//import routes
-const postRouter = require("./routes/post");
-const sysRouter = require("./routes/sys");
-const userRouter = require("./routes/user");
-const testRouter = require("./routes/test");
-const notesRouter = require("./routes/notes");
-
-console.log(`Server mode: ${process.env.NODE_ENV}`);
-console.log(`process.env.PM2_VERSION: ${process.env.PM2_VERSION}`);
-// console.log(`config mode: ${config.mode}`);
-
-
-const CONFIG = isProduction ? config.production : config.development
-const {
-    port,
-    api_url,
-    version
-} = CONFIG
-
-const ApiUrl = (link) => {
-    return api_url + link;
+//mongo db init
+if (process.env.ALLOW_MONGO == '1') {
+    mongoose.connect(process.env.MONGO_DB_URL, {
+        useNewUrlParser: true
+    })
+    const mongoDb = mongoose.connection
+    mongoDb.on('error', (err) => console.error(err))
+    mongoDb.once('open', () => {
+        console.log('Connected to Mongo DB')
+        process.env.MONGO_DB_INIT = '1' //string
+    })
 }
-console.log(`API URL: ${api_url}`);
+
 
 // Import all middlewares
 // support parsing of application/json type post data, 
@@ -138,6 +149,11 @@ app.use(express.urlencoded({
 })) // for parsing application/x-www-form-urlencoded
 
 app.use(cookieParser())
+/*
+Warning: connect.session() MemoryStore is not
+designed for a production environment, as it will leak
+memory, and will not scale past a single process.
+*/
 app.use(session({
     name: 'sid',
     secret: process.env.SESSION_SECRET_KEY,
@@ -159,22 +175,8 @@ if (!isProduction) {
     const swaggerUi = require('swagger-ui-express');
     const swaggerDocument = require('./swagger.json');
     app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    console.log(`Swagger api doc: http://localhost:${port}/doc`);
-    
+    console.log(`Swagger api doc: http://localhost:${port}/doc`);    
 }
-
-if (process.env.ALLOW_MONGO == '1') {
-    mongoose.connect(process.env.MONGO_DB_URL, {
-        useNewUrlParser: true
-    })
-    const mongoDb = mongoose.connection
-    mongoDb.on('error', (err) => console.error(err))
-    mongoDb.once('open', () => {
-        console.log('Connected to Mongo DB')
-        process.env.MONGO_DB_INIT = '1' //string
-    })
-}
-
 
 // app.post(ApiUrl('/login'), function (req, res) {
 //     //res.redirect('/');
@@ -202,17 +204,21 @@ app.use(ApiUrl('/user'), userRouter);
 app.use(ApiUrl('/test'), testRouter);
 
 //static files
-app.use('/', express.static(path.join(simpleApp.src)))
-
-app.use('/react', express.static(path.join(reactApp.src)))
-app.get('/react/*', function (req, res) {
-    res.sendFile(path.join(reactApp.src, 'index.html'), function (err) {
-        if (err) {
-            res.status(500).send(err)
-        }
-    })
-})
+app.use('/', express.static(path.join(webApp.src)))
+app.use('/react', express.static(path.join(webAppReact.src)))
+// app.get('/react/*', function (req, res) {
+//     res.sendFile(path.join(reactApp.src, 'index.html'), function (err) {
+//         if (err) {
+//             res.status(500).send(err)
+//         }
+//     })
+// })
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`)
+    if (!isProduction) {
+        console.log(`Url:`);
+        console.log(`http://localhost:${port}`);
+        console.log(`http://localhost:${port}/react`);
+    }    
 })

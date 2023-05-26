@@ -10,15 +10,15 @@
     "watch": "cross-env NODE_ENV=development nodemon server.js",
     "debug": "cross-env NODE_ENV=development node --inspect server.js",
     "debug-brk": "cross-env NODE_ENV=development node --inspect-brk=9229 server.js",
-    "pm2test": "cross-env NODE_ENV=development pm2 start ecosystem.config.js --only 'node-dev' --env development",
-    "pm2": "cross-env NODE_ENV=production pm2 start ecosystem.config.js -f --only 'node' --env production",
-    "pm2s": "cross-env NODE_ENV=production pm2 start ecosystem.config.js -f --only 'node' --env production && pm2 save --force",
+    "pm2dev": "cross-env NODE_ENV=development pm2 start ecosystem.config.js --only 'node-dev' --env development",
+    "pm2pro": "cross-env NODE_ENV=production pm2 start ecosystem.config.js -f --only 'node' --env production",
+    "pm2": "cross-env NODE_ENV=production pm2 start ecosystem.config.js -f --only 'node' --env production && pm2 save --force",
     "save": "pm2 save --force",
     "kill": "pm2 kill",
-    "restart": "pm2 resurrect",
-    "pm2-old": "cross-env NODE_ENV=production pm2 start server.js -i 2 -f --env production && pm2 save --force"
+    "restart": "pm2 resurrect"
   },
   "author": "AppTimDev",
+  "github": "https://github.com/AppTimDev/ProjectNodeServer",
   "license": "ISC",
   "devDependencies": {
     "cross-env": "^7.0.3",
